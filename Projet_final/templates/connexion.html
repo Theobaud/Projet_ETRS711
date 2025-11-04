@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<h2>Se connecter</h2>
+
+<div class="auth-card card">
+  <form class="form" method="post" action="{{ url_for('connexion', next=request.args.get('next')) }}">
+    <div class="form-grid">
+      <label>Email
+        <input type="email" name="email" placeholder="ex. toto@exemple.org" value="{{ email or '' }}" required>
+      </label>
+
+      <label>Mot de passe
+        <input type="password" name="mot_de_passe" required>
+      </label>
+
+      <div class="actions">
+        <button class="btn" type="submit">Connexion</button>
+      </div>
+    </div>
+  </form>
+
+  <p class="muted" style="margin-top:10px;">
+    Pas encore de compte ?
+    <a href="{{ url_for('inscription') }}">Inscription</a>
+  </p>
+</div>
+{% endblock %}

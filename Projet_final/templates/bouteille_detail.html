@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ b.nom }}{% endblock %}
+
+{% block content %}
+<article class="detail">
+  <img class="detail-img" src="{{ url_for('static', filename=b.photo or 'placeholder.jpg') }}" alt="">
+  <div class="detail-body">
+    <h2>{{ b.nom }}</h2>
+    <p class="muted">{{ b.domaine }} — {{ b.type }} {{ b.annee }} — {{ b.region }}</p>
+    <p>Prix indicatif : {{ "%.2f"|format(b.prix) }} €</p>
+    <p class="tag">Note moyenne : {{ moyenne or '–' }}/20</p>
+    {% if session.get('uid') %}
+      <a class="btn" href="#form-avis">Donner un avis</a>
+    {% endif %}
+  </div>
+</article>
+
+<h3>Ajouter un avis</h3>
+{% if session.get('uid') %}
+<form id="form-avis" method="post" class="form">
+  <label>Note (0–20, facultatif)
+    <input type="number" step="0.5" min="0" max="20" name="score">
+  </label>
+  <label>Commentaire
+    <textarea name="commentaire" rows="3" placeholder="Impressions, arômes, accords…"></textarea>
+  </label>
+  <button class="btn" type="submit">Publier l’avis</button>
+</form>
+{% else %}
+<p>Connecte-toi pour ajouter un avis.</p>
+{% endif %}
+
+<h3 style="margin-top:1rem">Avis de la communauté</h3>
+<ul class="list">
+  {% for r in revues %}
+    <li>
+      <strong>{{ r.auteur_nom }}</strong> — {{ r.score if r.score is not none else "–" }}/20
+      <div class="muted">{{ r.date }}</div>
+      {% if r.commentaire %}<p>{{ r.commentaire }}</p>{% endif %}
+    </li>
+  {% else %}
+    <li class="muted">Aucun avis.</li>
+  {% endfor %}
+</ul>
+
+{% if request.args.get('review') == '1' %}
+<script>
+  // Scroll jusqu'au formulaire et focus sur la note
+  const form = document.getElementById('form-avis');
+  if (form) {
+    form.scrollIntoView({behavior: 'smooth', block: 'start'});
+    const score = form.querySelector('input[name="score"]');
+    if (score) score.focus();
+  }
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Historique{% endblock %}
+{% block content %}
+<h2>Historique</h2>
+<table class="table">
+  <thead>
+    <tr><th>Date</th><th>Quantité</th><th>Motif</th><th>Bouteille</th><th>Étagère</th></tr>
+  </thead>
+  <tbody>
+    {% for m in moves %}
+    <tr>
+      <td class="muted">{{ m.date }}</td>
+      <td>{{ m.quantite }}</td>
+      <td>{{ m.motif }}</td>
+      <td>{{ m.nom }} — {{ m.domaine }} ({{ m.type }} {{ m.annee }}, {{ m.region }})</td>
+      <td>{{ m.etagere_nom }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="muted">Aucun mouvement.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Avis de la communauté{% endblock %}
+
+{% block content %}
+<h2>Avis de la communauté</h2>
+
+<form method="get" class="searchbar">
+  <input type="search" name="q" placeholder="Rechercher une bouteille (nom, domaine, région)…" value="{{ q or '' }}">
+  <button class="btn" type="submit">Rechercher</button>
+</form>
+
+{% if rows|length == 0 %}
+  <p class="muted">Aucun avis trouvé pour cette recherche.</p>
+{% else %}
+  <div class="review-list">
+    {% for r in rows %}
+      <a class="review-card" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">
+        <div class="head">
+          <div class="bname">{{ r.nom }}</div>
+          <div class="meta">{{ r.domaine }} — {{ r.type }} {{ r.annee }} • {{ r.region }}</div>
+        </div>
+        <div class="score">
+          <span class="star">★</span> {{ (r.score if r.score is not none else '—') }}
+        </div>
+        <div class="comment">
+          {{ r.commentaire or "—" }}
+        </div>
+        <div class="footer">
+          <span class="who">par {{ r.auteur_nom }}</span>
+          <span class="when">{{ r.date }}</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

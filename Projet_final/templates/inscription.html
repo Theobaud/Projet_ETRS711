@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Inscription{% endblock %}
+{% block content %}
+<h2>Inscription</h2>
+<form class="form" method="post">
+  <div class="grid2">
+    <label>Nom
+      <input name="nom" required>
+    </label>
+    <label>Email
+      <input name="email" type="email" required>
+    </label>
+  </div>
+  <label>Mot de passe
+    <input name="mot_de_passe" type="password" required>
+  </label>
+
+  <h3>Créer ma cave (optionnel)</h3>
+  <label class="row">
+    <input type="checkbox" name="wants_cave"> Créer une cave maintenant
+  </label>
+  <div class="grid2">
+    <label>Nombre d’étagères
+      <input type="number" name="nb_etageres" min="0" value="1">
+    </label>
+    <label>Capacité par étagère
+      <input type="number" name="capacite" min="1" value="10">
+    </label>
+  </div>
+  <button class="btn" type="submit">Créer mon compte</button>
+</form>
+{% endblock %}

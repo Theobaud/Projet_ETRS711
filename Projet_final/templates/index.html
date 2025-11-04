@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<h2>Tableau de bord</h2>
+
+<div class="dash-grid">
+  <div class="kpi">
+    <div class="kpi-label">Bouteilles en cave</div>
+    <div class="kpi-value">{{ stats.my_bottles }}</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Valeur estimée</div>
+    <div class="kpi-value">{{ "%.2f"|format(stats.my_value) }} €</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Bouteilles bues</div>
+    <div class="kpi-value">{{ stats.my_drunk }}</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Avis rédigés</div>
+    <div class="kpi-value">{{ stats.my_reviews }}</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Lots en cave</div>
+    <div class="kpi-value">{{ stats.my_lots }}</div>
+  </div>
+</div>
+
+<h3 style="margin-top:26px">Mieux notées</h3>
+{% if stats.top_rated %}
+  <div class="top-rated">
+    {% for r in stats.top_rated %}
+      <a class="top-card" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">
+        <div class="name">{{ r.nom }}</div>
+        <div class="meta">{{ r.domaine }} — {{ r.type }} {{ r.annee }}</div>
+        <div class="rating">
+          <span class="star">★</span> {{ r.moyenne }}/20
+          <span class="count">({{ r.n }} avis)</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Pas encore d’avis.</p>
+{% endif %}
+{% endblock %}

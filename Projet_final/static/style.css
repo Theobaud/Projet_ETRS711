@@ -1,0 +1,700 @@
+/* =========================================================
+   Cave à vin — thème sombre “chêne & doré”
+   Propre, sans vendor hacks; responsive & lisible.
+   ========================================================= */
+
+:root{
+  /* Palette */
+  --bg: #0f0c10;
+  --panel: #19151c;
+  --panel-2: #1e1922;
+  --ink: #f4ede3;
+  --muted: #bdaaa0;
+  --accent: #ffd27a;
+  --accent-2: #f0a34b;
+  --danger: #ff6b6b;
+    --bg: #141116;          /* was #0f0c10 */
+  --panel: #1b161f;       /* a hair lighter to match */
+  --panel-2: #211a25;
+
+  /* Boiseries / étagères */
+  --oak-1: #7b4d24;
+  --oak-2: #935d2a;
+  --oak-3: #a06938;
+
+  /* Rounds & ombres */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --shadow-1: 0 8px 20px rgba(0,0,0,.25);
+  --shadow-2: inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 20px rgba(0,0,0,.35);
+
+  /* Cave */
+  --slot: 132px;
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  background:
+    linear-gradient(180deg,#0e0b10 0%, #110d13 60%, #0f0c10 100%);
+  color:var(--ink);
+  font: 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+
+
+
+.container{
+  width:min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+/* -------------------- Header & Nav -------------------- */
+.header{ display:flex; align-items:center; gap:22px; margin:12px auto; }
+.header h1{ margin:0; font-weight:800; letter-spacing:.2px; font-size:clamp(22px,3.4vw,30px); }
+.nav{ display:flex; gap:14px; flex-wrap:wrap; }
+.nav a{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 14px; border-radius:999px;
+  color:var(--ink); text-decoration:none;
+  background: color-mix(in oklab, var(--panel) 70%, transparent);
+  border:1px solid rgba(255,255,255,.06);
+  transition:.2s background,.2s transform,.2s color;
+}
+.nav a:hover{ background: color-mix(in oklab, var(--panel-2) 75%, transparent); transform:translateY(-1px); }
+.nav a.active{ background:var(--accent); color:#35260c; }
+
+/* -------------------- Utile -------------------- */
+h2{ margin:18px 0 14px; font-size:24px; }
+.muted{ color:var(--muted); }
+
+.btn{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.6rem .9rem; border-radius:10px;
+  border:1px solid rgba(255,255,255,.06);
+  background:var(--accent); color:#2b200c; font-weight:700; cursor:pointer;
+  transition:.2s filter,.2s transform,.2s background;
+}
+.btn:hover{ background:var(--accent-2); transform:translateY(-1px); }
+.btn-outline{ background:transparent; color:var(--ink); border:1px solid rgba(255,255,255,.15); }
+.btn-outline:hover{ background:rgba(255,255,255,.06); }
+
+.badge{
+  background: rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--muted);
+  padding:.35rem .55rem; border-radius:999px; font-weight:700;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r-md);
+  box-shadow:var(--shadow-1);
+}
+
+.flash{
+  background:#2a1e2c; border:1px solid rgba(255,255,255,.12);
+  color:#fbe6ff; padding:.7rem 1rem; border-radius:12px; margin:8px 0 14px;
+}
+
+/* -------------------- Grille bouteille (list) -------------------- */
+.grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); }
+.card-wine{
+  background:var(--panel); border:1px solid rgba(255,255,255,.08);
+  border-radius:14px; overflow:hidden; transition:.2s transform,.2s box-shadow,.2s border-color;
+}
+.card-wine:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(0,0,0,.35); border-color:rgba(255,255,255,.18); }
+.card-wine .media{
+  aspect-ratio:4/3; overflow:hidden;
+  background: radial-gradient(120% 100% at 50% 0, rgba(255,210,120,.08), transparent 70%), #130f14;
+  display:grid; place-items:center;
+}
+.card-wine .media img{ max-height:120px; width:auto; object-fit:contain; filter:drop-shadow(0 8px 14px rgba(0,0,0,.55)); }
+.card-wine .body{ padding:12px 12px 14px; }
+.card-wine .title{ font-weight:800; margin-bottom:4px; overflow:hidden; }
+.card-wine .meta{ color:var(--muted); font-size:.92rem; }
+.card-wine .actions{ margin-top:10px; display:flex; gap:8px; }
+
+
+/* ===== Connexion / Auth ===== */
+.auth-card{
+  max-width: 520px;
+  margin: 16px auto 28px;
+  padding: 16px 18px;
+}
+
+.auth-card .form-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.auth-card .actions{
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-start;
+}
+/* ===== Global forms (used by connexion/inscription, etc.) ===== */
+.form label{
+  display:block;
+  margin:.45rem 0 .25rem;
+  font-size:.92rem;
+  color:var(--muted);
+}
+
+.form input,
+.form select,
+.form textarea{
+  width:100%;
+  height:40px;
+  padding:.55rem .7rem;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#121015;
+  color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.form textarea{ height:auto; min-height:90px; resize:vertical; }
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus{
+  outline:none;
+  border-color: rgba(255,210,122,.55);
+  box-shadow: 0 0 0 3px rgba(255,210,122,.15);
+}
+
+.form .actions{
+  margin-top:.6rem;
+  display:flex;
+  gap:10px;
+}
+
+/* Connexion card niceties */
+.auth-card{
+  max-width: 560px;         /* ou 520px si tu préfères */
+  margin: 10px 0 28px 0;    /* plus d'auto => plus centrée */
+  padding: 16px 18px;
+}
+.auth-card .form-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+.auth-card .muted a{
+  color: var(--accent);
+  text-decoration: none;
+}
+.auth-card .muted a:hover{
+  color: var(--accent-2);
+  text-decoration: underline;
+}
+
+/* ========================================================
+   Cave : étagères & slots (lisible, non rogné)
+   ======================================================== */
+
+/* taille / espacements */
+:root{
+  --slot: 190px;    /* largeur mini d’une case */
+  --slot-h: 210px;  /* hauteur d’une case */
+  --gap: 18px;      /* distance entre cases */
+}
+
+/* panneau bois */
+.shelf-board{
+  padding:18px 20px 22px;
+  border-radius:14px;
+  background:linear-gradient(180deg, #975f2e 0%, #8a552a 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.15);
+  overflow:visible;
+}
+
+/* grille des cases */
+.shelf-slots{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--slot),1fr));
+  gap:var(--gap);
+  align-items:start;
+}
+
+/* case */
+.slot{
+  position:relative;
+  height:var(--slot-h);
+  padding:10px;
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+  border:1px solid rgba(0,0,0,.25);
+  box-shadow:inset 0 8px 18px rgba(0,0,0,.30), inset 0 -10px 18px rgba(0,0,0,.22);
+  overflow:visible;
+}
+.slot.empty{ background:rgba(0,0,0,.05); box-shadow:inset 0 1px 0 rgba(255,255,255,.08); opacity:.55; }
+
+/* masquer numéro de slot */
+.slot .slot-no{ display:none; }
+
+/* pastille quantité */
+.slot .qty{
+  position:absolute; top:-8px; left:-8px;
+  min-width:28px; height:28px; padding:0 .45rem;
+  display:grid; place-items:center;
+  border-radius:999px; background:var(--accent); color:#33220b;
+  border:3px solid #2b1f10; font-weight:800; font-size:.9rem;
+  box-shadow:0 10px 16px rgba(0,0,0,.35);
+}
+
+/* carte bouteille dans le slot */
+.slot .bottle{
+  display:grid; grid-template-columns:56px 1fr; gap:10px; align-items:center; width:100%;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:12px; padding:10px 12px;
+  transition:.2s transform,.2s background,.2s border-color;
+}
+.slot.filled:hover .bottle{ transform:translateY(-1px); background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.16); }
+.slot .bottle .pic{ width:56px; height:120px; object-fit:contain; filter:drop-shadow(0 10px 16px rgba(0,0,0,.45)); }
+.slot .bottle .txt{ min-width:0; }
+.slot .bottle .name{
+  font-weight:800; line-height:1.12; font-size:1.02rem; margin-bottom:2px;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden;
+}
+.slot .bottle .meta{
+  color:var(--muted); font-size:.93rem;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden;
+}
+
+/* boutons Avis/Boire : centrés & alignés */
+.slot .actions{
+  position:absolute; left:0; right:0; bottom:12px;
+  display:flex; gap:10px; justify-content:center; align-items:center;
+}
+.slot .actions .btn{ padding:.48rem .72rem; line-height:1; min-width:54px; font-weight:700; }
+
+/* ========================================================
+   Formulaire “Ajouter une bouteille” (page nouvelle)
+   ======================================================== */
+
+/* wrapper */
+.new-bottle{
+  margin: 6px 0 14px;
+  padding: 16px;
+  background: radial-gradient(600px 320px at -10% -30%, rgba(255,210,120,.06), transparent 55%), var(--panel);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  box-shadow: var(--shadow-1);
+}
+
+/* grille du formulaire */
+.new-bottle .grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr .8fr .8fr 1fr .8fr; /* Domaine | Nom | Type | Année | Région | Prix */
+  gap: 12px 14px;
+  margin-bottom: 10px;
+}
+
+/* rangée "photo" pleine largeur */
+.new-bottle .row{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:12px;
+  margin-bottom: 8px;
+}
+
+/* bloc “Placement” */
+.new-bottle .placement{
+  display:grid;
+  grid-template-columns: 1fr .7fr .7fr;
+  gap: 12px 14px;
+  align-items:end;
+  margin: 6px 0 8px;
+}
+
+/* titres section */
+.new-bottle h3{
+  margin: 8px 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* labels / champs */
+.new-bottle label{ display:block; margin-bottom:6px; font-size:.92rem; color:var(--muted); }
+.new-bottle input[type="text"],
+.new-bottle input[type="number"],
+.new-bottle select,
+.new-bottle textarea{
+  width:100%; height:40px; padding:.55rem .7rem;
+  border-radius:10px; border:1px solid rgba(255,255,255,.12);
+  background:#121015; color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.new-bottle textarea{ height:auto; min-height:90px; resize:vertical; }
+
+/* focus */
+.new-bottle input:focus,
+.new-bottle select:focus,
+.new-bottle textarea:focus{
+  outline:none;
+  border-color: rgba(255,210,122,.55);
+  box-shadow: 0 0 0 3px rgba(255,210,122,.15);
+}
+
+/* input file */
+.new-bottle input[type="file"]{
+  height:auto; padding:.5rem .7rem; border-radius:10px;
+  background:#121015; color:var(--muted);
+  border:1px solid rgba(255,255,255,.12);
+}
+
+/* bouton principal */
+.new-bottle .actions{ margin-top:6px; }
+.new-bottle .actions .btn{ height:40px; padding:.55rem .9rem; }
+
+/* retirer les flèches (Chrome/Edge) */
+.new-bottle input[type=number]::-webkit-outer-spin-button,
+.new-bottle input[type=number]::-webkit-inner-spin-button{
+  -webkit-appearance:none; margin:0;
+}
+.new-bottle input[type=number]{ -moz-appearance:textfield; }
+
+/* ========================================================
+   Bloc “Ajout depuis catalogue” (page ma_cave)
+   ======================================================== */
+.add-catalog{
+  margin: 8px 0 18px;
+  padding: 14px;
+  background: radial-gradient(600px 320px at -10% -30%, rgba(255,210,120,.06), transparent 55%), var(--panel);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  box-shadow: var(--shadow-1);
+}
+.add-catalog .grid{
+  display:grid;
+  grid-template-columns: 1.4fr 1fr .6fr .8fr auto;
+  gap: 12px 14px; align-items:end;
+}
+.add-catalog label{ display:block; margin-bottom:6px; font-size:.92rem; color:var(--muted); }
+.add-catalog select,
+.add-catalog input[type="number"],
+.add-catalog input[type="text"]{
+  width:100%; height:40px; padding:.55rem .7rem;
+  border-radius:10px; border:1px solid rgba(255,255,255,.12);
+  background:#121015; color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.add-catalog select:focus,.add-catalog input:focus{
+  outline:none; border-color:rgba(255,210,122,.55); box-shadow:0 0 0 3px rgba(255,210,122,.15);
+}
+.add-catalog .btn{ height:40px; padding:.55rem .9rem; white-space:nowrap; }
+.add-catalog input[type=number]::-webkit-outer-spin-button,
+.add-catalog input[type=number]::-webkit-inner-spin-button{
+  -webkit-appearance:none; margin:0;
+}
+.add-catalog input[type=number]{ -moz-appearance:textfield; }
+
+/* ========================================================
+   Dashboard (index)
+   ======================================================== */
+.kpis{
+  display:grid; gap:16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin:10px 0 18px;
+}
+.kpi{ background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px; }
+.kpi .n{ font-size:34px; font-weight:900; }
+.kpi .label{ color:var(--muted); }
+
+.dash-grid{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap:16px; margin:16px 0 10px;
+}
+.kpi{
+  position:relative; padding:16px 18px; border-radius:14px;
+  background: radial-gradient(1200px 600px at -10% -30%, #2c1a40 0%, #1a131b 45%, #111014 100%);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 20px rgba(0,0,0,.35);
+}
+.kpi-label{ color:var(--muted,#b8a9c5); font-size:.9rem; margin-bottom:6px; }
+.kpi-value{ font-size:2rem; font-weight:800; letter-spacing:.5px; color:#eed1a8; }
+
+.top-rated{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap:14px; margin-top:8px;
+}
+.top-card{
+  display:block; padding:14px 16px; border-radius:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  text-decoration:none; color:inherit;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+/* --- Quick details (popover sur un slot) --- */
+.slot { position: relative; }
+
+.quick-btn {
+  /* petit bouton esthétique */
+  padding: .4rem .7rem;
+  line-height: 1;
+}
+
+/* Carte cachée par défaut */
+.quickcard{
+  position: absolute;
+  right: -6px;
+  bottom: 56px;              /* au-dessus des boutons */
+  min-width: 260px;
+  max-width: 320px;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  box-shadow: 0 18px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+  padding: 12px 12px 10px;
+  z-index: 30;
+  display: none;
+}
+
+/* petite flèche */
+.quickcard::after{
+  content:"";
+  position:absolute;
+  right: 18px;
+  bottom: -10px;
+  border-width: 10px 10px 0 10px;
+  border-style: solid;
+  border-color: rgba(255,255,255,.10) transparent transparent transparent;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.35));
+}
+.quickcard::before{
+  content:"";
+  position:absolute;
+  right: 18px;
+  bottom: -9px;
+  border-width: 10px 10px 0 10px;
+  border-style: solid;
+  border-color: var(--panel) transparent transparent transparent;
+}
+
+/* layout interne */
+.q-header{ margin-bottom: 6px; }
+.q-title{ font-weight: 800; }
+.q-meta{ font-size: .92rem; }
+
+.q-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  margin-top: 6px;
+}
+.q-grid .k{ color: var(--muted); font-size: .9rem; }
+.q-grid .v{ font-weight: 700; }
+
+.q-actions{
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* état ouvert */
+.quickcard.open{ display: block; }
+
+/* Sur mobile, centre la popover */
+@media (max-width: 640px){
+  .quickcard{
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+/* Réserve une barre d'actions au bas de chaque slot */
+.slot{
+  padding: 12px;
+  padding-bottom: 66px;     /* espace dédié aux boutons */
+  position: relative;
+}
+
+/* Un peu d'air sous la carte bouteille */
+.slot .bottle{
+  margin-bottom: 10px;
+}
+
+/* Barre d'actions bien contenue dans le slot */
+.slot .actions{
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;          /* au cas où l’écran est étroit */
+  z-index: 1;               /* au-dessus du fond du slot */
+}
+
+/* Évite les retours à la ligne moches */
+.slot .actions .btn{
+  white-space: nowrap;
+  min-width: 56px;
+  padding: .48rem .72rem;
+}
+
+/* ===== Page Avis (communauté) ===== */
+.searchbar{
+  display:flex; gap:10px; align-items:center;
+  margin: 10px 0 14px;
+}
+.searchbar input[type="search"]{
+  flex:1 1 auto; height:40px;
+  padding:.55rem .7rem; border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#121015; color:var(--ink);
+}
+.searchbar input[type="search"]:focus{
+  outline:none; border-color: rgba(255,210,122,.55);
+  box-shadow: 0 0 0 3px rgba(255,210,122,.15);
+}
+
+.review-list{
+  display:grid; gap:12px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+.review-card{
+  display:block; padding:14px 16px; border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  color:inherit; text-decoration:none;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.review-card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.16); box-shadow: 0 10px 20px rgba(0,0,0,.25); }
+
+.review-card .head .bname{ font-weight:800; font-size:1.02rem; }
+.review-card .head .meta{ color:var(--muted); font-size:.92rem; margin-top:2px; }
+.review-card .score{ margin-top:6px; font-weight:800; color:#ffd480; }
+.review-card .score .star{ color:#ffcc33; margin-right:4px; }
+.review-card .comment{ margin-top:6px; color:var(--ink); }
+.review-card .footer{ margin-top:8px; display:flex; justify-content:space-between; color:var(--muted); font-size:.9rem; }
+
+.top-card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.16); box-shadow:0 10px 20px rgba(0,0,0,.25); }
+.top-card .name{ font-weight:800; font-size:1.05rem; margin-bottom:4px; }
+.top-card .meta{ color:var(--muted,#b8a9c5); font-size:.92rem; margin-bottom:8px; }
+.top-card .rating{ font-weight:700; color:#ffd480; font-size:1rem; }
+.top-card .star{ color:#ffcc33; margin-right:4px; filter:drop-shadow(0 1px 0 rgba(0,0,0,.35)); }
+.top-card .count{ color:var(--muted,#b8a9c5); font-weight:600; margin-left:6px; font-size:.92rem; }
+/* ===== Brand / Logo ===== */
+:root{
+  --brand-purple: #6b2bd9;   /* raisin */
+  --brand-violet: #8a4bff;   /* highlight */
+  --brand-gold:   #ffd27a;   /* your accent */
+  --brand-ink:    #1b1418;   /* dark text on light bg */
+}
+
+/* container */
+.brand{
+  display:inline-grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  align-items:center;
+  text-decoration:none;
+  position:relative;
+  padding:8px 0 6px;
+}
+
+/* tiny grape icon */
+.brand-icon{
+  width:34px; height:34px;
+  grid-row:1 / span 2;
+  fill: url(#brandGrapeGrad);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+}
+
+/* gradient for the icon (via data URL) */
+.brand-icon:before{ content:""; }
+
+/* name */
+.brand-name{
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.2px;
+  font-size: clamp(22px, 3.2vw, 32px);
+  background: linear-gradient(90deg, var(--brand-purple), var(--brand-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;             /* gradient text */
+}
+
+/* highlight the second part subtly */
+.brand-em{
+  background: linear-gradient(90deg, var(--brand-violet), var(--brand-gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+
+/* tagline */
+.brand-tag{
+  margin-top:3px;
+  font-size: .9rem;
+  color: color-mix(in srgb, currentColor 60%, transparent);
+  grid-column:2;
+}
+
+/* accent underline */
+.brand::after{
+  content:"";
+  position:absolute;
+  left:44px;                      /* aligns after the icon */
+  right:0;
+  bottom:0;
+  height:3px;
+  border-radius:3px;
+  background: linear-gradient(90deg, var(--brand-purple), var(--brand-gold));
+  opacity:.6;
+  transform-origin:left;
+  transform: scaleX(.45);
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+/* a bit of life on hover/focus */
+.brand:hover::after,
+.brand:focus-visible::after{
+  transform: scaleX(1);
+  opacity:.9;
+}
+.brand:hover .brand-name,
+.brand:focus-visible .brand-name{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));
+}
+
+/* SVG gradient definition injected via CSS (works everywhere modern) */
+.brand-icon{
+  --grad: url('data:image/svg+xml;utf8,\
+  <svg xmlns="http://www.w3.org/2000/svg"><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">\
+  <stop offset="0" stop-color="%236b2bd9"/><stop offset="1" stop-color="%23ffd27a"/></linearGradient></svg>');
+  fill: url(#g); /* fallback */
+}
+
+/* -------------------- Responsive -------------------- */
+@media (max-width: 1100px){
+  .new-bottle .grid{ grid-template-columns: 1fr 1fr .8fr .8fr 1fr .8fr; }
+}
+@media (max-width: 900px){
+  .new-bottle .grid{ grid-template-columns: 1fr 1fr 1fr; }
+  .new-bottle .placement{ grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 680px){
+  :root{ --slot: 124px; }
+  .new-bottle .grid{ grid-template-columns: 1fr 1fr; }
+  .new-bottle .placement{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px){
+  .slot .actions .btn{ padding: .42rem .6rem; min-width: 48px; }
+  .slot{ padding-bottom: 58px; }
+}

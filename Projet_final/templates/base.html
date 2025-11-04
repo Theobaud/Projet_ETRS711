@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Cave à vin{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="container header">
+  <!-- Brand / Logo -->
+  <a href="{{ url_for('index') }}" class="brand" aria-label="Accueil Cave à vin">
+    <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="8" cy="8" r="3"/>
+      <circle cx="12" cy="6" r="3"/>
+      <circle cx="14.5" cy="9.5" r="3"/>
+      <circle cx="10.5" cy="11.5" r="3"/>
+      <circle cx="6" cy="12" r="3"/>
+      <rect x="15.8" y="2.2" width="1.8" height="5" rx="1"/>
+    </svg>
+    <span class="brand-name">Cave <span class="brand-em">à vin</span></span>
+    <span class="brand-tag">Organiser • Déguster • Partager</span>
+  </a>
+
+  <!-- Navigation -->
+  <nav class="nav" aria-label="Navigation principale">
+    <a href="{{ url_for('index') }}">Accueil</a>
+    {% if session.get('uid') %}
+      <a href="{{ url_for('ma_cave') }}">Ma cave</a>
+      <a href="{{ url_for('avis') }}">Avis</a>
+      <a href="{{ url_for('bouteille_nouvelle') }}">Ajouter une bouteille</a>
+      <a href="{{ url_for('historique') }}">Historique</a>
+      <a href="{{ url_for('deconnexion') }}">Déconnexion</a>
+    {% else %}
+      <a href="{{ url_for('inscription') }}">Inscription</a>
+      <a href="{{ url_for('connexion') }}">Connexion</a>
+    {% endif %}
+  </nav>
+</header>
+
+<main class="container">
+  {# Flash messages (avec catégories si présentes) #}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash">
+        {% for cat, msg in messages %}
+          <div class="flash-item {{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="container muted" style="margin-top:24px;">
+  Cave à vin - BAUDOIN Théo 
+</footer>
+
+<script>
+  // Popover "fiche rapide" des slots
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.quick-btn');
+    if (btn) {
+      const id = btn.getAttribute('data-qid');
+      const card = document.getElementById(id);
+      document.querySelectorAll('.quickcard.open').forEach(c => { if (c !== card) c.classList.remove('open'); });
+      if (card) card.classList.toggle('open');
+      e.stopPropagation();
+      return;
+    }
+    if (!e.target.closest('.quickcard')) {
+      document.querySelectorAll('.quickcard.open').forEach(c => c.classList.remove('open'));
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.quickcard.open').forEach(c => c.classList.remove('open'));
+    }
+  });
+</script>
+
+</body>
+</html>

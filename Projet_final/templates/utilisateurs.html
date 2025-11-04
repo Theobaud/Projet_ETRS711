@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Utilisateurs{% endblock %}
+{% block content %}
+  <h2>Utilisateurs</h2>
+  <table>
+    <thead><tr><th>#</th><th>Nom</th><th>Email</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.id_utilisateur }}</td>
+        <td>{{ u.nom }}</td>
+        <td class="muted">{{ u.email }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+{% block content %}
+<h2>Tableau de bord</h2>
+
+<section class="stats">
+  <div class="stat"><div class="kpi">{{ stats.utilisateurs }}</div><div class="label">utilisateurs</div></div>
+  <div class="stat"><div class="kpi">{{ stats.bouteilles }}</div><div class="label">bouteilles</div></div>
+  <div class="stat"><div class="kpi">{{ stats.revues }}</div><div class="label">avis</div></div>
+  <div class="stat"><div class="kpi">{{ stats.lots_en_cave }}</div><div class="label">lots en cave</div></div>
+</section>
+
+<h3 style="margin-top:2rem">Mieux notées</h3>
+<div class="grid">
+  {% for b in top %}
+  <article class="card-wine">
+    <div class="media">
+      <img src="{{ url_for('static', filename=b.photo or 'placeholder.jpg') }}" alt="">
+    </div>
+    <div class="body">
+      <div class="title">{{ b.nom }}</div>
+      <div class="meta">{{ b.domaine }} — {{ b.region }}</div>
+      <div class="tag">Moy : {{ b.m or '–' }}/20</div>
+      <div class="actions">
+        <a class="btn" href="{{ url_for('bouteille_detail', bid=b.id_bouteille) }}">Voir / Avis</a>
+      </div>
+    </div>
+  </article>
+  {% else %}
+  <p>Pas encore d’avis.</p>
+  {% endfor %}
+</div>
+{% endblock %}

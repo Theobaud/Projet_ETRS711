@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Ajouter une bouteille{% endblock %}
+
+{% block content %}
+<h2>Ajouter une bouteille à ma cave</h2>
+
+<div class="new-bottle">
+  <form method="post" enctype="multipart/form-data">
+    <!-- Ligne 1 : infos bouteille -->
+    <div class="grid">
+      <label>Domaine
+        <input name="domaine" type="text" required>
+      </label>
+
+      <label>Nom
+        <input name="nom" type="text" required>
+      </label>
+
+      <label>Type
+        <input name="type" type="text" placeholder="Rouge / Blanc / Rosé" required>
+      </label>
+
+      <label>Année
+        <input name="annee" type="number" min="1900" max="2100" required>
+      </label>
+
+      <label>Région
+        <input name="region" type="text" required>
+      </label>
+
+      <label>Prix (€)
+        <input name="prix" type="number" min="0" step="0.01" required>
+      </label>
+    </div>
+
+    <!-- Photo -->
+    <div class="row">
+      <label>Photo (facultatif)</label>
+      <input type="file" name="photo" accept="image/*">
+    </div>
+
+    <!-- Placement -->
+    <h3>Placement</h3>
+    <div class="placement">
+      <label>Étagère
+        <select name="id_etagere" required>
+          {% for e in shelves %}
+            <option value="{{ e.id_etagere }}">#{{ loop.index }} — {{ e.nom }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>Quantité
+        <input name="quantite" type="number" min="1" value="1" required>
+      </label>
+
+      <label>Slot # (laisser vide pour choisir manuellement plus tard)
+        <input name="slot" type="number" min="1" placeholder="ex. 3">
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="submit">Ajouter</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

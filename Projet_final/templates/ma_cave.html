@@ -1,0 +1,248 @@
+{% extends "base.html" %} 
+{% block title %}Ma cave{% endblock %}
+
+{% block content %}
+<h2>Ma cave</h2>
+
+{% if cave %}
+
+  <!-- Barre de tri/filtre -->
+  <div class="add-catalog">
+    <form method="get" class="card"
+          style="display:flex; gap:16px; flex-wrap:wrap; align-items:end; padding:10px 12px; max-width:980px; margin:10px 0;">
+      <!-- Tri -->
+      <div>
+        <label style="display:block; font-size:.9rem; color:var(--muted)">Trier par</label>
+        <select name="sort">
+          <option value="slot"    {{ 'selected' if sort=='slot' }}>Emplacement</option>
+          <option value="nom"     {{ 'selected' if sort=='nom' }}>Nom</option>
+          <option value="domaine" {{ 'selected' if sort=='domaine' }}>Domaine</option>
+          <option value="annee"   {{ 'selected' if sort=='annee' }}>Année</option>
+          <option value="type"    {{ 'selected' if sort=='type' }}>Type</option>
+          <option value="region"  {{ 'selected' if sort=='region' }}>Région</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block; font-size:.9rem; color:var(--muted)">Ordre</label>
+        <select name="dir">
+          <option value="asc"  {{ 'selected' if direction=='asc' }}>↑ Croissant</option>
+          <option value="desc" {{ 'selected' if direction=='desc' }}>↓ Décroissant</option>
+        </select>
+      </div>
+
+      <!-- Filtre -->
+      <div style="margin-left:14px;">
+        <label style="display:block; font-size:.9rem; color:var(--muted)">Filtrer par</label>
+        <select name="filter" id="filter-field">
+          <option value="">— Aucun filtre —</option>
+          <option value="region"  {{ 'selected' if filt_field=='region'  }}>Région</option>
+          <option value="type"    {{ 'selected' if filt_field=='type'    }}>Type</option>
+          <option value="annee"   {{ 'selected' if filt_field=='annee'   }}>Année</option>
+          <option value="domaine" {{ 'selected' if filt_field=='domaine' }}>Domaine</option>
+          <option value="nom"     {{ 'selected' if filt_field=='nom'     }}>Nom</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display:block; font-size:.9rem; color:var(--muted)">Valeur</label>
+        <select name="value" id="filter-value">
+          <option value="">— Toutes —</option>
+          {% for opt in current_options %}
+            <option value="{{ opt }}" {{ 'selected' if filt_value|string==opt|string }}>{{ opt }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <button class="btn" type="submit">Appliquer</button>
+      </div>
+    </form>
+
+    <div class="add-catalog" id="add-shelf" style="margin-top:10px;">
+      <form method="post" action="{{ url_for('etagere_ajouter') }}" class="card"
+            style="display:flex; gap:12px; align-items:end; padding:10px 12px; flex-wrap:wrap; max-width:640px;">
+        <div>
+          <label style="display:block; font-size:.9rem; color:var(--muted)">Nom de l’étagère</label>
+          <input type="text" name="nom" placeholder="Étagère 2" style="height:40px; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#121015; color:var(--ink);">
+        </div>
+        <div>
+          <label style="display:block; font-size:.9rem; color:var(--muted)">Capacité</label>
+          <input type="number" name="capacite" min="1" max="200" value="10" required
+                style="width:120px; height:40px; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#121015; color:var(--ink);">
+        </div>
+        <div>
+          <button class="btn" type="submit">+ Ajouter une étagère</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      // Recharge la page pour rafraîchir la liste "Valeur" quand on change le champ filtré
+      document.getElementById('filter-field')?.addEventListener('change', (e) => {
+        const form = e.target.form;
+        const v = form.querySelector('#filter-value');
+        if (v) v.value = '';
+        form.requestSubmit();
+      });
+    </script>
+  </div>
+
+  <!-- Étagères / Slots -->
+  <div class="shelves">
+    {% for E in etageres %}
+      {% set shelf_items = stock | selectattr('id_etagere','equalto', E.id_etagere) | list %}
+
+      <section class="shelf">
+        <div class="shelf-head">
+          <div class="shelf-title">Étagère {{ loop.index }}</div>
+          <div class="shelf-cap">{{ E.capacite }} emplacements</div>
+        </div>
+
+        <div class="shelf-board">
+          <div class="shelf-slots">
+
+            {% if sort == 'slot' %}
+              {# --- Vue “slot réel” --- #}
+              {% for i in range(1, E.capacite + 1) %}
+                {% set lot_list = shelf_items | selectattr('slot','equalto', i) | list %}
+                {% if lot_list|length %}
+                  {% set r = lot_list[0] %}
+                  <div class="slot filled">
+                    <span class="qty">{{ r.quantite }}</span>
+
+                    <div class="bottle">
+                      <img class="pic"
+                           src="{{ url_for('static', filename=(r.photo if r.photo else 'placeholder.jpg')) }}"
+                           alt="">
+                      <div class="txt">
+                        <div class="name">{{ r.nom }}</div>
+                        <div class="meta">{{ r.domaine }} — {{ r.type }} {{ r.annee }}</div>
+                      </div>
+                    </div>
+
+                    <div class="actions">
+                      <button type="button" class="btn btn-outline quick-btn" data-qid="q{{ r.id_stock }}">Détails</button>
+
+                      {# lien avis/fiche uniquement si on a une vraie bouteille #}
+                      {% if r.id_bouteille %}
+                        <a class="btn btn-outline" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">Avis</a>
+                      {% else %}
+                        <span class="btn btn-outline disabled" aria-disabled="true">Avis</span>
+                      {% endif %}
+
+                      <form method="post" action="{{ url_for('stock_consommer') }}">
+                        <input type="hidden" name="id_stock" value="{{ r.id_stock }}">
+                        <input type="hidden" name="quantite" value="1">
+                        <button class="btn" type="submit">Boire</button>
+                      </form>
+
+                      <form method="post" action="{{ url_for('stock_consommer') }}">
+                        <input type="hidden" name="id_stock" value="{{ r.id_stock }}">
+                        <input type="hidden" name="quantite" value="1">
+                        <input type="hidden" name="redirect_to_review" value="1">
+                        <button class="btn btn-outline" type="submit">Boire & noter</button>
+                      </form>
+                    </div>
+
+                    <!-- Popover “fiche rapide” -->
+                    <div class="quickcard" id="q{{ r.id_stock }}">
+                      <div class="q-header">
+                        <div class="q-title">{{ r.nom }}</div>
+                        <div class="q-meta muted">{{ r.domaine }}</div>
+                      </div>
+                      <div class="q-grid">
+                        <div><span class="k">Type</span><span class="v">{{ r.type }}</span></div>
+                        <div><span class="k">Année</span><span class="v">{{ r.annee }}</span></div>
+                        <div><span class="k">Région</span><span class="v">{{ r.region }}</span></div>
+                        <div><span class="k">Prix</span><span class="v">{{ "%.2f"|format(r.prix|default(0)) }} €</span></div>
+                        <div><span class="k">Quantité</span><span class="v">{{ r.quantite }}</span></div>
+                        {% if r.slot %}<div><span class="k">Slot</span><span class="v">#{{ r.slot }}</span></div>{% endif %}
+                      </div>
+                      {% if r.id_bouteille %}
+                        <div class="q-actions">
+                          <a class="btn" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">Fiche complète & avis</a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                {% else %}
+                  <div class="slot empty"></div>
+                {% endif %}
+              {% endfor %}
+
+            {% else %}
+              {# --- Vue “triée” : ordre logique; remplace par slot vide si pas de bouteille --- #}
+              {% for i in range(1, E.capacite + 1) %}
+                {% set idx = i - 1 %}
+                {% if idx < shelf_items|length %}
+                  {% set r = shelf_items[idx] %}
+                  {% if r.id_bouteille %}
+                    <div class="slot filled">
+                      <span class="qty">{{ r.quantite }}</span>
+
+                      <div class="bottle">
+                        <img class="pic"
+                             src="{{ url_for('static', filename=(r.photo if r.photo else 'placeholder.jpg')) }}"
+                             alt="">
+                        <div class="txt">
+                          <div class="name">{{ r.nom }}</div>
+                          <div class="meta">{{ r.domaine }} — {{ r.type }} {{ r.annee }}</div>
+                        </div>
+                      </div>
+
+                      <div class="actions">
+                        <button type="button" class="btn btn-outline quick-btn" data-qid="q{{ r.id_stock }}">Détails</button>
+                        <a class="btn btn-outline" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">Avis</a>
+
+                        <form method="post" action="{{ url_for('stock_consommer') }}">
+                          <input type="hidden" name="id_stock" value="{{ r.id_stock }}">
+                          <input type="hidden" name="quantite" value="1">
+                          <button class="btn" type="submit">Boire</button>
+                        </form>
+
+                        <form method="post" action="{{ url_for('stock_consommer') }}">
+                          <input type="hidden" name="id_stock" value="{{ r.id_stock }}">
+                          <input type="hidden" name="quantite" value="1">
+                          <input type="hidden" name="redirect_to_review" value="1">
+                          <button class="btn btn-outline" type="submit">Boire & noter</button>
+                        </form>
+                      </div>
+
+                      <!-- Popover “fiche rapide” (mêmes infos) -->
+                      <div class="quickcard" id="q{{ r.id_stock }}">
+                        <div class="q-header">
+                          <div class="q-title">{{ r.nom }}</div>
+                          <div class="q-meta muted">{{ r.domaine }}</div>
+                        </div>
+                        <div class="q-grid">
+                          <div><span class="k">Type</span><span class="v">{{ r.type }}</span></div>
+                          <div><span class="k">Année</span><span class="v">{{ r.annee }}</span></div>
+                          <div><span class="k">Région</span><span class="v">{{ r.region }}</span></div>
+                          <div><span class="k">Prix</span><span class="v">{{ "%.2f"|format(r.prix|default(0)) }} €</span></div>
+                          <div><span class="k">Quantité</span><span class="v">{{ r.quantite }}</span></div>
+                        </div>
+                        <div class="q-actions">
+                          <a class="btn" href="{{ url_for('bouteille_detail', bid=r.id_bouteille) }}">Fiche complète & avis</a>
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="slot empty"></div>
+                  {% endif %}
+                {% else %}
+                  <div class="slot empty"></div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+          </div> <!-- /.shelf-slots -->
+        </div>   <!-- /.shelf-board -->
+      </section>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <p>Aucune cave pour l’instant.</p>
+{% endif %}
+{% endblock %}
