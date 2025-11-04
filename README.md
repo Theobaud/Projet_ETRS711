@@ -44,6 +44,7 @@ python app.py
 Ouvrir http://127.0.0.1:5000
 
 -----------------------------------------------------------------------
+
 Structure : 
 
 .
@@ -62,6 +63,7 @@ static/uploads/ — photos bouteilles (créé automatiquement)
 
 cave.db — base SQLite (générée à l’exécution)
 
+-----------------------------------------------------------------------
 
 Sécurité & robustesse
 
